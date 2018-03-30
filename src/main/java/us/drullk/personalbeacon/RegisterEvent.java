@@ -7,14 +7,25 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod.EventBusSubscriber( modid = Reference.MOD_ID )
 public class RegisterEvent {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> items = event.getRegistry();
-        items.register(new ItemPersonalBeacon().setUnlocalizedName("personalbeacon").setRegistryName(new ResourceLocation(Reference.MOD_ID, "personalbeacon")));
-
+        registerItem(items, new ItemPersonalBeacon(), "personalbeacon");
     }
+
+    private static void registerItem(IForgeRegistry<Item> items, Item item, String regname) {
+        items.register(item.setUnlocalizedName(regname).setRegistryName(new ResourceLocation(Reference.MOD_ID, regname)));
+
+        if (item instanceof IModelRegisterCallback)
+            models.add((IModelRegisterCallback) item);
+    }
+
+    static List<IModelRegisterCallback> models = new ArrayList<>();
 
     /*
 
