@@ -8,5 +8,5 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 public class PersonalBeacon {
-    private static Logger logger;
+    public static Logger logger;
 }
