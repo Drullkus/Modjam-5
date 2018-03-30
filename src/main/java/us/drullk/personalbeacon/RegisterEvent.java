@@ -13,5 +13,18 @@ public class RegisterEvent {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> items = event.getRegistry();
         items.register(new ItemPersonalBeacon().setUnlocalizedName("personalbeacon").setRegistryName(new ResourceLocation(Reference.MOD_ID, "personalbeacon")));
+
     }
+
+    /*
+
+    TODO 1. Personal Enchantment table
+    TODO 2. Combo beacon base block + enchantment table bookshelf - OCTUPLE COMPRESSED BOOKSHELF MAXIMUM EFFECT
+    TODO 3. Personal Furnace?
+    E E E E E E E E E
+    B B B B B E E E E
+    B E E E B E E E E
+    B E T E B E E E E
+
+     */
 }
