@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "pocketblocks",
+  "name": "Pocket Blocks",
+  "description": "Pocket Blocks!",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["Drullkus"],
+  "credits": "Drullkus",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

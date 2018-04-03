@@ -1,3 +1,10 @@
+ext.configFile = file "gradle.properties"
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
 buildscript {
     repositories {
         jcenter()
@@ -10,10 +17,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-
-version = "1.0"
-group = "us.drullk.personalbeacon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "personalbeacon"
+version = config.mod_version
+group = "us.drullk.pocketblocks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "pocketblocks"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
@@ -23,6 +29,12 @@ compileJava {
 minecraft {
     version = "1.12.2-14.23.2.2641"
     runDir = "run"
+
+    replace '@mod_version@', version
+    replace '@mod_id@', config.mod_id
+
+    replaceIn "Reference.java"
+    replace "@VERSION@", project.version
     
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
