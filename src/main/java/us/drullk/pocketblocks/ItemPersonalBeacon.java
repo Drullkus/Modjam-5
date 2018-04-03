@@ -3,6 +3,7 @@ package us.drullk.pocketblocks;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -41,6 +42,7 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
     private static final String LANG_VALID = "personalbeacon.valid";
 
     public ItemPersonalBeacon() {
+        this.setCreativeTab(CreativeTabs.BREWING);
         this.addPropertyOverride(
                 new ResourceLocation("active"),
                 (stack, worldIn, entityIn) -> {
