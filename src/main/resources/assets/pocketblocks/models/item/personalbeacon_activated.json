@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "pocketblocks:items/personalbeacon",
+    "layer1": "pocketblocks:items/personalbeacon_activated"
+  }
+}

@@ -1,4 +1,4 @@
-package us.drullk.personalbeacon;
+package us.drullk.pocketblocks;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;

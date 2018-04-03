@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "pocketblocks:items/personalbeacon"
+  },
+  "overrides": [ { "predicate": { "active": 1 }, "model": "pocketblocks:item/personalbeacon_activated" } ]
+}

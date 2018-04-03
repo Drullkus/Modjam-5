@@ -1,0 +1,5 @@
+{
+  "result": { "item": "pocketblocks:personalbeacon" },
+  "ingredients": [{ "item": "minecraft:beacon" }, { "item": "minecraft:shulker_shell" }],
+  "type": "minecraft:crafting_shapeless"
+}
