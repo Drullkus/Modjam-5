@@ -1,3 +1,30 @@
 item.personalbeacon.name=Personal Beacon
+
 personalbeacon.invalid=This Beacon isn't arranged! It'll need a triangle of blocks in the inventory slots below, like a standard Beacon pyramid, to begin effects.
 personalbeacon.valid=This Beacon has been arranged! It has %s levels and affecting players in a %s block radius.
+
+compressedbookshelf.compression.singular=This Bookshelf is the equivalent of %s bookshelves in one block, having been compressed once.
+compressedbookshelf.compression=This Bookshelf is the equivalent of %s bookshelves in one block, having been compressed %s times.
+compressedbookshelf.info=Can be in Beacon pyramids and Enchantment Libraries, both in the world and in your inventory.
+
+compressedbookshelf.name=Compressed %s
+multicompressedbookshelf.name=%s Compressed %s
+
+pocketblocks.one=one
+pocketblocks.two=two
+pocketblocks.three=three
+pocketblocks.four=four
+pocketblocks.five=five
+pocketblocks.six=six
+pocketblocks.seven=seven
+pocketblocks.eight=eight
+pocketblocks.nine=nine
+
+pocketblocks.double=Double
+pocketblocks.triple=Triple
+pocketblocks.quadruple=Quadruple
+pocketblocks.quintuple=Quintuple
+pocketblocks.sextuple=Sextuple
+pocketblocks.septuple=Septuple
+pocketblocks.octuple=Octuple
+pocketblocks.nonuple=Nonuple

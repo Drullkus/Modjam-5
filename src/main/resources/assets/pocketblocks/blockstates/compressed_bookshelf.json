@@ -1,0 +1,14 @@
+{
+  "forge_marker": 1,
+  "defaults": { "model": "minecraft:bookshelf", "textures": { "particle": "blocks/bookshelf" } },
+  "variants": {
+    "compressed_bookshelf_1": [{ "model": "pocketblocks:bookshelf_1" }],
+    "compressed_bookshelf_2": [{ "model": "pocketblocks:bookshelf_2" }],
+    "compressed_bookshelf_3": [{ "model": "pocketblocks:bookshelf_3" }],
+    "compressed_bookshelf_4": [{ "model": "pocketblocks:bookshelf_4" }],
+    "compressed_bookshelf_5": [{ "model": "pocketblocks:bookshelf_5" }],
+    "compressed_bookshelf_6": [{ "model": "pocketblocks:bookshelf_6" }],
+    "compressed_bookshelf_7": [{ "model": "pocketblocks:bookshelf_7" }],
+    "compressed_bookshelf_8": [{ "model": "pocketblocks:bookshelf_8" }]
+  }
+}

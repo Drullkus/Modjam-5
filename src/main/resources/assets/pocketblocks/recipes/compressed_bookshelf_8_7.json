@@ -1,0 +1,5 @@
+{
+  "result": { "item": "pocketblocks:compressed_bookshelf_7", "count": 9 },
+  "ingredients": [ { "item": "pocketblocks:compressed_bookshelf_8" } ],
+  "type": "minecraft:crafting_shapeless"
+}

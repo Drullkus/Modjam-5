@@ -30,17 +30,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static us.drullk.pocketblocks.Reference.BEACON.*;
+
 public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
-    //private static final String NBT_BEACON_COMPOUND = "Bacondata";
-    private static final String NBT_BEACON_LEVELS = "Levels";
-    private static final String NBT_POTION_ARRAY = "CustomPotionEffects";
-    private static final String NBT_POTION_EFFECT = "Id";
-    private static final String NBT_POTION_COUNTDOWN = "Duration";
-    private static final String NBT_POTION_INTENSITY = "Amplifier";
-
-    private static final String LANG_INVALID = "personalbeacon.invalid";
-    private static final String LANG_VALID = "personalbeacon.valid";
-
     public ItemPersonalBeacon() {
         this.setCreativeTab(CreativeTabs.BREWING);
         this.addPropertyOverride(
@@ -223,12 +215,12 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
         if (compound != null) {
             int levels = compound.getInteger(NBT_BEACON_LEVELS);
 
-            if (levels > 0) tooltip.add(I18n.translateToLocalFormatted(LANG_VALID, levels, 2*levels));
+            if (levels > 0) tooltip.add(I18n.translateToLocalFormatted(LANG_BEACON_VALID, levels, 2*levels));
             else {
-                tooltip.add(I18n.translateToLocal(LANG_INVALID));
+                tooltip.add(I18n.translateToLocal(LANG_BEACON_INVALID));
             }
-        } else if (worldIn != null) {
-
+        } else {
+            tooltip.add(I18n.translateToLocal(LANG_BEACON_INVALID));
         }
 
         PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
@@ -241,7 +233,7 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
 
         if (compound == null) return returned;
 
-        NBTTagList list = compound.getTagList(ItemPersonalBeacon.NBT_POTION_ARRAY, Constants.NBT.TAG_COMPOUND);
+        NBTTagList list = compound.getTagList(NBT_POTION_ARRAY, Constants.NBT.TAG_COMPOUND);
 
         if (list.tagCount() < 1) return returned;
 
@@ -249,7 +241,7 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
 
         if (!(potionCompound instanceof NBTTagCompound)) return returned;
 
-        Potion potion = Potion.getPotionById(((NBTTagCompound) potionCompound).getInteger(ItemPersonalBeacon.NBT_POTION_EFFECT));
+        Potion potion = Potion.getPotionById(((NBTTagCompound) potionCompound).getInteger(NBT_POTION_EFFECT));
 
         if (potion == null) return returned;
 

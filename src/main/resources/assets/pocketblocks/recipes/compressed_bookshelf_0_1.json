@@ -1,0 +1,15 @@
+{
+  "result": { "item": "pocketblocks:compressed_bookshelf_1" },
+  "ingredients": [
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" },
+    { "item": "minecraft:bookshelf" }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}

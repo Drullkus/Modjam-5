@@ -1,0 +1,169 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "plank": "blocks/planks_oak",
+    "books": "blocks/bookshelf"
+  },
+  "elements": [
+    {
+      "from" : [  0, 0,  0 ],
+      "to"   : [ 16, 1, 16 ],
+      "faces": {
+        "down" : { "texture": "#plank", "cullface": "down"  },
+        "up"   : { "texture": "#plank"                      },
+        "north": { "texture": "#plank", "cullface": "north" },
+        "south": { "texture": "#plank", "cullface": "south" },
+        "west" : { "texture": "#plank", "cullface": "west"  },
+        "east" : { "texture": "#plank", "cullface": "east"  }
+      }
+    }, {
+      "from" : [  0, 15,  0 ],
+      "to"   : [ 16, 16, 16 ],
+      "faces": {
+        "down" : { "texture": "#plank"                      },
+        "up"   : { "texture": "#plank", "cullface": "up"    },
+        "north": { "texture": "#plank", "cullface": "north" },
+        "south": { "texture": "#plank", "cullface": "south" },
+        "west" : { "texture": "#plank", "cullface": "west"  },
+        "east" : { "texture": "#plank", "cullface": "east"  }
+      }
+    }, {
+      "from" : [  0, 7,  0 ],
+      "to"   : [ 16, 9, 16 ],
+      "faces": {
+        "down" : { "texture": "#plank"                      },
+        "up"   : { "texture": "#plank"                      },
+        "north": { "texture": "#plank", "cullface": "north" },
+        "south": { "texture": "#plank", "cullface": "south" },
+        "west" : { "texture": "#plank", "cullface": "west"  },
+        "east" : { "texture": "#plank", "cullface": "east"  }
+      }
+    }, {
+      "from": [ 0,  1, 0 ],
+      "to":   [ 1, 15, 1 ],
+      "faces": {
+        "down" : { "texture": "#plank" },
+        "up"   : { "texture": "#plank" },
+        "north": { "texture": "#plank" },
+        "south": { "texture": "#plank" },
+        "west" : { "texture": "#plank" },
+        "east" : { "texture": "#plank" }
+      }
+    }, {
+      "from": [ 15,  1, 0 ],
+      "to":   [ 16, 15, 1 ],
+      "faces": {
+        "down" : { "texture": "#plank" },
+        "up"   : { "texture": "#plank" },
+        "north": { "texture": "#plank" },
+        "south": { "texture": "#plank" },
+        "west" : { "texture": "#plank" },
+        "east" : { "texture": "#plank" }
+      }
+    }, {
+      "from": [ 0,  1, 15 ],
+      "to":   [ 1, 15, 16 ],
+      "faces": {
+        "down" : { "texture": "#plank" },
+        "up"   : { "texture": "#plank" },
+        "north": { "texture": "#plank" },
+        "south": { "texture": "#plank" },
+        "west" : { "texture": "#plank" },
+        "east" : { "texture": "#plank" }
+      }
+    }, {
+      "from": [ 15,  1, 15 ],
+      "to":   [ 16, 15, 16 ],
+      "faces": {
+        "down" : { "texture": "#plank" },
+        "up"   : { "texture": "#plank" },
+        "north": { "texture": "#plank" },
+        "south": { "texture": "#plank" },
+        "west" : { "texture": "#plank" },
+        "east" : { "texture": "#plank" }
+      }
+    }, {
+      "from": [ 1,  1, 14.5 ],
+      "to"  : [ 8, 15, 14.5 ],
+      "rotation": { "origin": [ 4.5, 8, 14.5 ], "axis": "y", "angle": 22.5, "rescale": true },
+      "faces": {
+        "north": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" },
+        "south": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [  8,  1, 14.5 ],
+      "to"  : [ 15, 15, 14.5 ],
+      "rotation": { "origin": [ 11.5, 8, 14.5 ], "axis": "y", "angle": -22.5, "rescale": true },
+      "faces": {
+        "north": { "uv": [ 8, 1, 15, 15 ], "texture": "#books" },
+        "south": { "uv": [ 8, 1, 15, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [ 1,  1, 1.5 ],
+      "to"  : [ 8, 15, 1.5 ],
+      "rotation": { "origin": [ 4.5, 8, 1.5 ], "axis": "y", "angle": -22.5, "rescale": true },
+      "faces": {
+        "north": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" },
+        "south": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [  8,  1, 1.5 ],
+      "to"  : [ 15, 15, 1.5 ],
+      "rotation": { "origin": [ 11.5, 8, 1.5 ], "axis": "y", "angle": 22.5, "rescale": true },
+      "faces": {
+        "north": { "uv": [ 8, 1, 15, 15 ], "texture": "#books" },
+        "south": { "uv": [ 8, 1, 15, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [ 14.5,  1, 1 ],
+      "to"  : [ 14.5, 15, 8 ],
+      "rotation": { "origin": [ 14.5, 8, 4.5 ], "axis": "y", "angle": -22.5, "rescale": true },
+      "faces": {
+        "west": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" },
+        "east": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [ 14.5,  1,  8 ],
+      "to"  : [ 14.5, 15, 15 ],
+      "rotation": { "origin": [ 14.5, 8, 11.5 ], "axis": "y", "angle": 22.5, "rescale": true },
+      "faces": {
+        "west": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" },
+        "east": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [ 1.5,  1, 1 ],
+      "to"  : [ 1.5, 15, 8 ],
+      "rotation": { "origin": [ 1.5, 8, 4.5 ], "axis": "y", "angle": 22.5, "rescale": true },
+      "faces": {
+        "west": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" },
+        "east": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [ 1.5,  1,  8 ],
+      "to"  : [ 1.5, 15, 15 ],
+      "rotation": { "origin": [ 1.5, 8, 11.5 ], "axis": "y", "angle": -22.5, "rescale": true },
+      "faces": {
+        "west": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" },
+        "east": { "uv": [ 1, 1, 8, 15 ], "texture": "#books" }
+      }
+    }, {
+      "from": [ 7,  0,  2 ],
+      "to":   [ 9, 16, 14 ],
+      "faces": {
+        "north": { "texture": "#plank" },
+        "south": { "texture": "#plank" },
+        "west" : { "texture": "#plank" },
+        "east" : { "texture": "#plank" }
+      }
+    }, {
+      "from": [  2,  0, 7 ],
+      "to":   [ 14, 16, 9 ],
+      "faces": {
+        "north": { "texture": "#plank" },
+        "south": { "texture": "#plank" },
+        "west" : { "texture": "#plank" },
+        "east" : { "texture": "#plank" }
+      }
+    }
+  ]
+}

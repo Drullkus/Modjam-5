@@ -1,0 +1,15 @@
+{
+  "result": { "item": "pocketblocks:compressed_bookshelf_6" },
+  "ingredients": [
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" },
+    { "item": "pocketblocks:compressed_bookshelf_5" }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}
