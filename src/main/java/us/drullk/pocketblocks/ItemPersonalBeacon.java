@@ -247,4 +247,8 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
 
         return potion.getLiquidColor();
     }
+
+    public int getItemStackLimit(ItemStack stack) {
+        return 1;
+    }
 }
