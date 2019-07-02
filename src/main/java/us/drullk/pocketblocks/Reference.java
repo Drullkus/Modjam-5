@@ -9,17 +9,6 @@ public class Reference {
     static final String COMMON_PROXY = "us.drullk.pocketblocks.CommonProxy";
     static final String CLIENT_PROXY = "us.drullk.pocketblocks.ClientProxy";
 
-    static final class BEACON {
-        static final String NBT_BEACON_LEVELS = "Levels";
-        static final String NBT_POTION_ARRAY = "CustomPotionEffects";
-        static final String NBT_POTION_EFFECT = "Id";
-        static final String NBT_POTION_COUNTDOWN = "Duration";
-        static final String NBT_POTION_INTENSITY = "Amplifier";
-
-        static final String LANG_BEACON_INVALID = "personalbeacon.invalid";
-        static final String LANG_BEACON_VALID = "personalbeacon.valid";
-    }
-
     static final class BOOKSHELF {
         static final String LANG_BOOKSHELF_INFO = "compressedbookshelf.info";
         static final String LANG_BOOKSHELF_COMPRESSION_ONE_TIMES = "compressedbookshelf.compression.singular";

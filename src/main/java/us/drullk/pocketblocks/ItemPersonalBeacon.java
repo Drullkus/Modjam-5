@@ -18,7 +18,6 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -30,133 +29,143 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static us.drullk.pocketblocks.Reference.BEACON.*;
-
 public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
+    private static final int DEFAULT_BEAM_COLOR = 0xFF_FF_FF_FF;
+
+    private static final String NBT_BEACON_LEVELS = "Levels";
+    private static final String NBT_POTION_ARRAY = "CustomPotionEffects";
+    private static final String NBT_POTION_EFFECT = "Id";
+    private static final String NBT_POTION_COUNTDOWN = "Duration";
+    private static final String NBT_POTION_INTENSITY = "Amplifier";
+
+    private static final String LANG_BEACON_INVALID = "personalbeacon.invalid";
+    private static final String LANG_BEACON_VALID = "personalbeacon.valid";
+
     public ItemPersonalBeacon() {
         this.setCreativeTab(CreativeTabs.BREWING);
         this.addPropertyOverride(
                 new ResourceLocation("active"),
                 (stack, worldIn, entityIn) -> {
                     NBTTagCompound compound = stack.getTagCompound();
-                    return compound != null ? compound.getInteger(NBT_BEACON_LEVELS) > 0 ? 1 : 0 : 0;
+                    return compound != null && compound.getInteger(NBT_BEACON_LEVELS) > 0 ? 1 : 0;
                 }
         );
     }
 
-    public void onUpdate(ItemStack personalBeacon, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if (worldIn.isRemote || !(entityIn instanceof EntityPlayer) || entityIn instanceof FakePlayer || entityIn.getEntityWorld().getTotalWorldTime() % 80L != 0L) return;
-
-        boolean isValid = false;
-        int levels = 0;
+    @Override
+    public void onUpdate(ItemStack personalBeacon, World worldIn, Entity entityIn, final int itemSlot, boolean isSelected) {
+        if (worldIn.isRemote) return;
+        if (!(entityIn instanceof EntityPlayer) || entityIn instanceof FakePlayer) return;
+        if (entityIn.getEntityWorld().getTotalWorldTime() % 80L != 0L) return;
+        if (itemSlot <= 8) return; // tests if it's not in hotbar
+        if (itemSlot % 9 == 0 || itemSlot % 9 == 8) return; // tests if it's not on the sides of the player inventory.
 
         EntityPlayer player = (EntityPlayer) entityIn;
         List<ItemStack> playerInventory = player.inventory.mainInventory;
 
-        if (itemSlot > 8 && itemSlot % 9 != 0 && itemSlot % 9 != 8) {
-            isValid = true;
+        int upperSlot = itemSlot - 9;
 
-            itemSlot -= 9;
+        int maxSize = playerInventory.size();
 
-            int maxSize = playerInventory.size();
+        int levels = 0;
 
-            for (int row = 1; isValid && row < maxSize / 9; row++) {
-                int minSlot = itemSlot + ( 8 * row);
-                int maxSlot = itemSlot + (10 * row);
+        for (int row = 1; row < maxSize / 9; row++) {
+            int minSlot = upperSlot + ( 8 * row);
+            int maxSlot = upperSlot + (10 * row);
 
-                int requiredRow = row + (itemSlot / 9);
+            int requiredRow = row + (upperSlot / 9);
 
-                if (isValid = (
-                        minSlot / 9 == requiredRow
-                        && maxSlot / 9 == requiredRow
-                        && maxSlot < maxSize
-                        && scanInventoryRow(minSlot, maxSlot, playerInventory)))
-                    levels++;
-            }
+            if (minSlot / 9 != requiredRow
+                || maxSlot / 9 != requiredRow
+                || maxSlot >= maxSize
+                || !scanInventoryRow(minSlot, maxSlot, playerInventory))
+                break;
 
-            isValid = levels > 0;
+            levels++;
         }
+
+        if (levels == 0) return; // Are we all good? Let's continue to actual effects then.
 
         NBTTagCompound compoundTest = personalBeacon.getTagCompound();
 
         NBTTagCompound compound = compoundTest == null ? new NBTTagCompound() : compoundTest;
         compound.setInteger(NBT_BEACON_LEVELS, levels);
 
-        if (!isValid) return; // Are we all good? Let's continue to actual effects then.
-
-        itemSlot += 9;
         NBTTagList beaconEffects = compound.getTagList(NBT_POTION_ARRAY, Constants.NBT.TAG_COMPOUND);
 
         if(beaconEffects.hasNoTags()) {
-            ItemStack leftStack = playerInventory.get(itemSlot - 1);
-            ItemStack rightStack = playerInventory.get(itemSlot + 1);
-
-            if (!leftStack.isEmpty() && !rightStack.isEmpty()) {
-                Item rightItem = rightStack.getItem();
-                Item leftItem = leftStack.getItem();
-
-                if (leftItem.isBeaconPayment(leftStack)) {
-                    if (!(rightItem instanceof ItemPotion)) return;
-
-                    handleActivation(rightStack, leftStack, compound);
-                } else if (rightItem.isBeaconPayment(rightStack)) {
-                    if (!(leftItem instanceof ItemPotion)) return;
-
-                    handleActivation(leftStack, rightStack, compound);
-                }
-
-                personalBeacon.setTagCompound(compound);
-            }
+            setEffects(personalBeacon, itemSlot, playerInventory, compound);
         } else {
-            RegistryNamespaced<ResourceLocation, Potion> potionRegistry = Potion.REGISTRY;
+            emitEffects(personalBeacon, levels, player, compound, beaconEffects);
+        }
+    }
 
-            boolean allCountsZero = true;
-            boolean allTagsInvalid = true;
+    private void emitEffects(ItemStack personalBeacon, int levels, EntityPlayer player, NBTTagCompound compound, NBTTagList beaconEffects) {
+        boolean allCountsZero = true;
+        boolean allTagsInvalid = true; // if taglist contains only unreadable tags
 
-            NBTTagList modifiedEffects = new NBTTagList();
+        NBTTagList modifiedEffects = new NBTTagList(); // moving onto the next
 
-            for (NBTBase beaconEffect : beaconEffects) {
-                if (beaconEffect instanceof NBTTagCompound) {
-                    allTagsInvalid = false;
-                    NBTTagCompound effectNBT = (NBTTagCompound) beaconEffect;
+        for (NBTBase beaconEffect : beaconEffects) {
+            if (!(beaconEffect instanceof NBTTagCompound)) continue;
 
-                    int timeLeft = effectNBT.getInteger(NBT_POTION_COUNTDOWN);
+            allTagsInvalid = false;
+            NBTTagCompound effectNBT = (NBTTagCompound) beaconEffect;
 
-                    if (timeLeft != 0) {
-                        Potion effect = Potion.getPotionById(effectNBT.getInteger(NBT_POTION_EFFECT));
+            int timeLeft = effectNBT.getInteger(NBT_POTION_COUNTDOWN);
+            if (timeLeft == 0) continue;
 
-                        int duration;
+            Potion effect = Potion.getPotionById(effectNBT.getInteger(NBT_POTION_EFFECT));
 
-                        if (timeLeft > 80) {
-                            duration = Math.min(280, timeLeft);
-                            effectNBT.setInteger(NBT_POTION_COUNTDOWN, timeLeft - 80);
-                        } else {
-                            duration = timeLeft;
-                            effectNBT.setInteger(NBT_POTION_COUNTDOWN, 0);
-                            effectNBT.setInteger(NBT_POTION_EFFECT, 0);
-                        }
+            int duration;
 
-                        if (timeLeft > 0) allCountsZero = false;
-
-                        if (effect != null) {
-                            int range = levels * 2;
-                            AxisAlignedBB box = player.getEntityBoundingBox().grow(range);
-                            List<EntityPlayer> players = player.getEntityWorld().getEntitiesWithinAABB(EntityPlayer.class, box);
-
-                            for (EntityPlayer aPlayer : players)
-                                aPlayer.addPotionEffect(new PotionEffect(effect, duration, effectNBT.getInteger(NBT_POTION_INTENSITY)));
-
-                            modifiedEffects.appendTag(effectNBT);
-                        }
-                    }
-                }
+            if (timeLeft > 80) {
+                duration = Math.min(280, timeLeft);
+                effectNBT.setInteger(NBT_POTION_COUNTDOWN, timeLeft - 80);
+            } else {
+                duration = timeLeft;
+                effectNBT.setInteger(NBT_POTION_COUNTDOWN, 0);
+                effectNBT.setInteger(NBT_POTION_EFFECT, 0);
             }
 
-            // Overwrite with a new list either way to nuke garbage compounds in array
-            compound.setTag(NBT_POTION_ARRAY, allTagsInvalid || allCountsZero ? new NBTTagList() : modifiedEffects);
+            if (timeLeft > 0) allCountsZero = false;
+
+            if (effect == null) continue;
+
+            int range = levels * 2;
+            AxisAlignedBB box = player.getEntityBoundingBox().grow(range);
+            List<EntityPlayer> players = player.getEntityWorld().getEntitiesWithinAABB(EntityPlayer.class, box);
+
+            for (EntityPlayer aPlayer : players)
+                aPlayer.addPotionEffect(new PotionEffect(effect, duration, effectNBT.getInteger(NBT_POTION_INTENSITY)));
+
+            modifiedEffects.appendTag(effectNBT);
+        }
+
+        // Overwrite with a new list either way to nuke garbage compounds in array
+        compound.setTag(NBT_POTION_ARRAY, allTagsInvalid || allCountsZero ? new NBTTagList() : modifiedEffects);
+        personalBeacon.setTagCompound(compound);
+    }
+
+    private void setEffects(ItemStack personalBeacon, int itemSlot, List<ItemStack> playerInventory, NBTTagCompound compound) {
+        ItemStack leftStack = playerInventory.get(itemSlot - 1);
+        ItemStack rightStack = playerInventory.get(itemSlot + 1);
+
+        if (!leftStack.isEmpty() && !rightStack.isEmpty()) {
+            if (!tryHandleActivation(leftStack, rightStack, compound)) {
+                tryHandleActivation(rightStack, leftStack, compound);
+            }
 
             personalBeacon.setTagCompound(compound);
         }
+    }
+
+    private boolean tryHandleActivation(ItemStack first, ItemStack second, NBTTagCompound compound) {
+        if (!first.getItem().isBeaconPayment(first)) return false;
+        if (!(second.getItem() instanceof ItemPotion)) return false;
+
+        handleActivation(second, first, compound);
+        return true;
     }
 
     private static void handleActivation(ItemStack potionStack, ItemStack paymentStack, NBTTagCompound compound) {
@@ -184,23 +193,19 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
     }
 
     private static boolean scanInventoryRow(int startSlot, int endSlot, List<ItemStack> inventory) {
-        boolean bool = true;
+        for (int counter = startSlot; counter < inventory.size() + 9 && counter <= endSlot; counter++) {
+            int slot = counter + 9 < inventory.size() ? counter + 9 : counter - 27;
 
-        for (int counter = startSlot; bool && counter < inventory.size() + 9 && counter <= endSlot; counter++) {
-            int c = counter + 9 < inventory.size() ? counter + 9 : counter - 27;
+            ItemStack stack = inventory.get(slot);
+            if (stack.isEmpty()) return false;
 
-            ItemStack stack = inventory.get(c);
-
-            if (!stack.isEmpty()) {
-                Block block = Block.getBlockFromItem(stack.getItem());
-
-                BlockPos dummyPos = BlockPos.ORIGIN.down();
-
-                bool = block.isBeaconBase(null, dummyPos, dummyPos);
-            } else return false;
+            Block block = Block.getBlockFromItem(stack.getItem());
+            BlockPos dummyPos = BlockPos.ORIGIN.down();
+            if (!block.isBeaconBase(null, dummyPos, dummyPos))
+                return false;
         }
 
-        return bool;
+        return true;
     }
 
     @Override
@@ -209,14 +214,16 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
     }
 
     @SideOnly(Side.CLIENT)
+    @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         NBTTagCompound compound = stack.getTagCompound();
 
         if (compound != null) {
             int levels = compound.getInteger(NBT_BEACON_LEVELS);
 
-            if (levels > 0) tooltip.add(I18n.translateToLocalFormatted(LANG_BEACON_VALID, levels, 2*levels));
-            else {
+            if (levels > 0) {
+                tooltip.add(I18n.translateToLocalFormatted(LANG_BEACON_VALID, levels, 2 * levels));
+            } else {
                 tooltip.add(I18n.translateToLocal(LANG_BEACON_INVALID));
             }
         } else {
@@ -227,27 +234,26 @@ public class ItemPersonalBeacon extends Item implements IModelRegisterCallback {
     }
 
     static int getPrimaryColorFromStack(ItemStack stack) {
-        int returned = 0xFF_00_00_00;
-
         NBTTagCompound compound = stack.getTagCompound();
-
-        if (compound == null) return returned;
+        if (compound == null)
+            return DEFAULT_BEAM_COLOR;
 
         NBTTagList list = compound.getTagList(NBT_POTION_ARRAY, Constants.NBT.TAG_COMPOUND);
-
-        if (list.tagCount() < 1) return returned;
+        if (list.tagCount() < 1)
+            return DEFAULT_BEAM_COLOR;
 
         NBTBase potionCompound = list.get(0);
-
-        if (!(potionCompound instanceof NBTTagCompound)) return returned;
+        if (!(potionCompound instanceof NBTTagCompound))
+            return DEFAULT_BEAM_COLOR;
 
         Potion potion = Potion.getPotionById(((NBTTagCompound) potionCompound).getInteger(NBT_POTION_EFFECT));
-
-        if (potion == null) return returned;
+        if (potion == null)
+            return DEFAULT_BEAM_COLOR;
 
         return potion.getLiquidColor();
     }
 
+    @Override
     public int getItemStackLimit(ItemStack stack) {
         return 1;
     }
